@@ -1,0 +1,9 @@
+docker compose up -d --no-deps --build postgres
+
+
+
+  create table employee (
+                    id int Primary Key,
+                    name varchar(40)
+                    )
+                    """
