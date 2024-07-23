@@ -1,7 +1,7 @@
 from datetime import datetime,timedelta
 from airflow import DAG
 from airflow.operators.python import PythonOperator
-from dags.etl_script import execute_etl
+from etl_script import execute_etl
 
 
 default_args = {
