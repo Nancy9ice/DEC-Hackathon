@@ -68,6 +68,8 @@ The following tools and skills were used in this project:
     - Transformed the continents column to align with the correct country's continenent
     - Split and modeled the data into three dataframes to be inserted into the postgres database: Countries, Country_languages (bridge table) and languages
 
+- Step 4: Load DataFrames to PostgreSQL database
+
 
 ## Questions 
 
