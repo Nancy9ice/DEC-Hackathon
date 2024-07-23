@@ -1,6 +1,7 @@
 from datetime import datetime,timedelta
 from airflow import DAG
-from airflow.operators.bash import BashOperator
+from airflow.operators.python import PythonOperator
+from dags.etl_script import execute_etl
 
 
 default_args = {
@@ -19,9 +20,9 @@ with DAG(
      schedule_interval= '@daily'
         
 ) as dag: 
-    task1= BashOperator(
+    task1= PythonOperator(
         task_id = 'hackaton_task',
-        bash_command= 'python etl_script.py'
+        python_callable=execute_etl
      )
 
     task1 

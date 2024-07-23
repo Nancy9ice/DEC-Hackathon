@@ -88,6 +88,21 @@ def transform_data(data):
     
     return df_countries, df_country_languages
 
+
+def transform_language(df_country_languages):
+    logging.info("Transforming languages")
+    unique_language = df_country_languages['language_name'].unique()
+    df_language = pd.DataFrame(unique_language, columns=['language_name'])
+    df_language['language_id'] = df_language.index + 1 
+    df_language = df_language[['language_id', 'language_name']]
+    
+    df_country_languages = df_country_languages.merge(df_language, on='language_name', how='left')
+    logging.info("Transformation complete")
+
+    return df_language, df_country_languages
+
+
+
 def clean_data(df_countries, df_country_languages):
     logging.info("Cleaning data")
     df_countries.loc[df_countries['country_name'] == 'Russia', 'continents'] = 'Europe' 
@@ -101,17 +116,20 @@ def clean_data(df_countries, df_country_languages):
 
     df_countries = df_countries[df_countries['country_name'] != 'Antarctica']
 
-    df_country_languages = df_country_languages[['country_id', 'language_code', 'language_name']]
+    df_country_languages = df_country_languages[['country_id', 'language_id']]
 
     logging.info("Data cleaning complete")
     return df_countries, df_country_languages
 
-def load_data_to_postgresql(df_countries, df_country_languages, connection_string):
+
+
+def load_data_to_postgresql(df_countries, df_country_languages, df_language, connection_string):
     logging.info("Loading data to PostgreSQL database")
     try:
         engine = create_engine(connection_string)
         df_countries.to_sql('countries', engine, if_exists='replace', index=False)
         df_country_languages.to_sql('country_languages', engine, if_exists='replace', index=False)
+        df_language.to_sql('languages', engine, if_exists='replace', index=False)
         logging.info("DataFrames have been successfully loaded into the PostgreSQL database.")
     except Exception as e:
         logging.error(f"Error loading data to PostgreSQL: {e}")
