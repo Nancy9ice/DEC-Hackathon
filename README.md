@@ -2,7 +2,7 @@
 
 This project was created in the spirit of the Data Engineering Community Hackathon by the Data Benders team.
 
-![](DEC-Hackathon/travel-image.jpg)
+![travel agency](travel-image.jpg)
 
 *Image by [fonsheijnsbroek_amsterdam_photos](https://unsplash.com/@fonsheijnsbroek_amsterdam_photos) on Unsplash*
 
