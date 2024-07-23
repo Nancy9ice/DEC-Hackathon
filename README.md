@@ -90,147 +90,204 @@ The following tools and skills were used in this project:
 
 ## Answers to Stated Questions
 
-### 1. What are the earliest and latest times of the rides?
+### 1. How many countries speaks French?
 
 ```sql
-SELECT Min(time) AS earliest_time, Max(time) AS latest_time
-FROM uber2014
+SELECT COUNT(DISTINCT c.country_name) AS num_countries
+FROM countries c
+JOIN country_languages cl ON c.country_id = cl.country_id
+JOIN languages l ON cl.language_id = l.language_id
+WHERE l.language_name = 'French';
+```
+
+**Results**
+![alt text](images/query_1.png)
+
+
+### 2. How many countries speak English?
+
+```sql
+SELECT COUNT(DISTINCT c.country_name) AS num_countries
+FROM countries c
+JOIN country_languages cl ON c.country_id = cl.country_id
+JOIN languages l ON cl.language_id = l.language_id
+WHERE l.language_name = 'English';
 ```
 
 **Results**
 
-According to the results, the uber rides went round the clock.
+![alt text](images/query_2.png)
 
-![](Earliest%20and%20Latest%20Time.PNG)
-
-
-### 2. How many rides were there in each month?
+### 3. How many countries have more than one official language?
 
 ```sql
-SELECT TO_CHAR(date, 'Month') AS month, COUNT(*)
-FROM uber2014
-GROUP BY month
-ORDER BY COUNT(*) DESC
+SELECT COUNT(country_id) AS num_countries
+FROM (
+    SELECT country_id, COUNT(language_id) AS num_languages
+    FROM country_languages
+    GROUP BY country_id
+    HAVING COUNT(language_id) > 1
+) AS multi_lang_countries;
 ```
 
 **Results**
 
-The rides increased as time advanced. This could be a proof that the marketing strategies of Uber are working or customers are satisfied with the services and refer their friends and family. 
+![alt text](images/query_3.png)
 
-![](Rides%20by%20Month.PNG)
-
-### 3. What were the total rides for the top 10 pickup counties?
+### 4. How many countries have the Euro as their official currency?
 
 ```sql
-SELECT DISTINCT(county), COUNT(*)
-FROM uber2014
-GROUP BY county
-ORDER BY COUNT(*) DESC
-LIMIT 10
+SELECT COUNT(*) AS num_countries
+FROM countries
+WHERE currency_code = 'EUR';
 ```
 
 **Results**
 
-For context, New York County and Kings County are the same as Manhattan and Brooklyn respectively. According to the results, Manhattan has the most rides.
+![alt text](images/query_4.png)
 
-![](Top%2010%20Rides%20by%20County.PNG)
-
-Let's do a little comparison with the 2014 New York population in some counties.
-
-![](New%20York%20Population.PNG)
-
-With this comparison, we can't just conclude that Uber is mostly used by the Manhattan people because our data doesn't provide the number of unique users unlike the population census results that is per head count. 
-
-However, I would advise that Uber focuses more on regions that have relatively less population and population density so they won't attract attention from the government that they are causing traffic. These regions could be Bronx, Brooklyn(Kings) and Queens counties in the New York City. 
-
-They can also extend their tentacles outside New York City. 
-
-### 4. What were the total rides for the bottom 10 pickup counties?
+### 5. How many countries are from Western Europe?
 
 ```sql
-SELECT DISTINCT(county), COUNT(*)
-FROM uber2014
-GROUP BY county
-ORDER BY COUNT(*) 
-LIMIT 10
+SELECT COUNT(*) AS num_countries
+FROM countries
+WHERE sub_region = 'Western Europe';
 ```
 
 **Results**
 
-Depending on the goals of Uber, they could either close down theur services in these regions that have extremely low patronage or strategize on how to increase awareness and take out any competition that might be there. 
+![alt text](images/query_5.png)
 
-![](Bottom%2010%20Rides%20by%20County.PNG)
-
-### 5. What were the total rides for the respective pickup locations?
-
+### 6. How many countries have not yet gained independence?
 ```sql
-SELECT DISTINCT(location), COUNT(*)
-FROM uber2014
-GROUP BY location
-ORDER BY COUNT(*) DESC
+SELECT COUNT(*) AS num_countries
+FROM countries
+WHERE independence = FALSE;
 ```
 
 **Results**
 
-Take note that New York City is in New York State and are somewhat different. New York City comprises five boroughs: Brooklyn (Kings), Queens, Manhattan, the Bronx, and Staten Island (Richmond). 
+![alt text](images/query_6.png)
 
-According to the results, Uber is well known in New York City than other states in United States. 
+### 7. How many distinct continents and how many countries from each?
 
-![](Rides%20by%20Locations.PNG)
-
-### 6. What were the total rides by day?
 ```sql
-SELECT TO_CHAR(date, 'day') AS day, COUNT(*)
-FROM uber2014
-GROUP BY day
-ORDER BY COUNT(*) DESC
+SELECT continents, COUNT(*) AS num_countries
+FROM countries
+GROUP BY continents;
 ```
 
 **Results**
 
-Looking at these results, there's not much gap amongst the total rides for the different days so we can't just outrightly conclude that most people use Uber on certain days. 
+![alt text](images/query_7.png)
 
-![](Rides%20by%20Day.PNG)
 
-### 7. How many vehicles are allocated to the registered base stations and locations?
+### 8. How many countries start the week on a day other than Monday? 
 
 ```sql
-SELECT DISTINCT(base_region), base_name, COUNT(*)
-FROM uber2014
-GROUP BY base_region, base_name
-ORDER BY COUNT(*) DESC
+SELECT COUNT(*) AS num_countries
+FROM countries
+WHERE start_of_week != 'monday';
 ```
 
 **Results**
 
-For comtext, let me briefly explain what Base stations mean. 
+![alt text](images/query_8.png)
 
-See Base stations as the administrative houses of the uber riders. Just like how you go to your workplace when you want to answer to a physical meeting hosted by your employer, that's how uber riders see the base stations. 
 
-These base stations provide support to the uber riders, pass information, and also track the movement of the registered riders. 
+### 9. How many countries are not United Nations members?
 
-The base_name are the names for each  company associated with the assigned base codes while base regions are where they are located. 
+```sql
+SELECT COUNT(*) AS num_countries
+FROM countries
+WHERE united_nations_member = FALSE;
+```
 
-![](Rides%20by%20Bases.PNG)
+**Results**
 
-### 8. According to your answer in number 7, is it advisable to register more base stations or stick to the already registered base stations?
+![alt text](images/query_9.png)
 
-According to the results, it's obvious that the base stations are only located in New York City. So what about the regions outside New York City(NYC? 
 
-What happens to the uber riders there?
+### 10. How many countries are United Nations members?
 
-To make informed decisions, it's best to look at how often riders request for support both within and outside NYC and also revise the goals of uber. 
+```sql
+SELECT COUNT(*) AS num_countries
+FROM countries
+WHERE united_nations_member = TRUE;
+```
 
-If uber wants to stick to providing services only within NYC, then there's no need to have base stations outside NYC. 
+**Results**
 
-However, if the request for support is high, then it's best to register more base stations outside NYC so that the riders would be satistfied which also increases the number of riders through referrals and indirectly increases the number of those that would also request for rides. 
+![alt text](images/query_11.png)
 
-In this case, it's a win-win for everyone. 
+
+### 11. At least 2 countries with the lowest population for each continent?
+
+```sql
+SELECT continents, country_name, population
+FROM (
+    SELECT continents, country_name, population,
+           ROW_NUMBER() OVER (PARTITION BY continents ORDER BY population ASC) AS rank
+    FROM countries
+) AS ranked_countries
+WHERE rank <= 2;
+```
+
+**Results**
+
+![alt text](images/query_11.png)
+
+
+### 12. Top 2 countries with the largest area for each continent?
+
+```sql
+SELECT continents, country_name, area
+FROM (
+    SELECT continents, country_name, area,
+           ROW_NUMBER() OVER (PARTITION BY continents ORDER BY area DESC) AS rank
+    FROM countries
+) AS ranked_countries
+WHERE rank <= 2;
+```
+
+**Results**
+
+![alt text](images/query_12.png)
+
+
+### 13. Top 5 countries with the largest area?
+
+```sql
+SELECT country_name, area
+FROM countries
+ORDER BY area DESC
+LIMIT 5;
+```
+
+**Results**
+
+![alt text](images/query_13.png)
+
+
+### 14. Top 5 countries with the lowest area?
+
+```sql
+SELECT country_name, area
+FROM countries
+ORDER BY area ASC
+LIMIT 5;
+```
+
+**Results**
+
+![alt text](images/query_14.png)
 
 ##  Conclusion/Recommendations
 
-This is a quick reminder that this data is data from 2014. Based on the findings from this data, Uber shouldn't rush into decisions to increase the awareness of their services. 
+In building a sustainable and resilient data infrastructure for a company, it's important to consider several factors. Because one considers scalabilty doesn't mean that he/she should go for a big tool for a very small usecase. Choose a simple solution that can work for the company for a long time while also minimizing cost. 
 
-Seeing that their services is in a crucial industry as Transportation, they should ensure that decisions made should be in not just their favour but also the favour of the masses by considering factors like population, population density, request for support from riders, economic state of regions in the US, and many other factors. 
+That way, the company would see one as a valuable data engineer.
 
-Lastly, the decisions made should not put them in the tight spot with government regarding traffic congestion and security of customers. 
+This was what we tried to portray while working on this hackathon project.
+
+Thank you!

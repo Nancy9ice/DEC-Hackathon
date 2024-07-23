@@ -105,6 +105,16 @@ def transform_language(df_country_languages):
 
 def clean_data(df_countries, df_country_languages):
     logging.info("Cleaning data")
+    df_countries['common_native_name'] = df_countries['common_native_name'].apply(lambda value: ', '.join(set(item.strip() for item in value.split(','))))
+
+    df_countries['country_code'] = df_countries['country_code'].replace('', None).astype('str')
+    df_countries['currency_name'] = df_countries['currency_name'].replace('', None).astype('str')
+    df_countries['currency_code'] = df_countries['currency_code'].replace('', None).astype('str')
+    df_countries['currency_symbol'] = df_countries['currency_symbol'].replace('', None).astype('str')
+    df_countries['capital'] = df_countries['capital'].replace('', None).astype('str')
+    df_countries['common_native_name'] = df_countries['common_native_name'].replace('', None).astype('str')
+    df_countries['subregion'] = df_countries['subregion'].replace('', None).astype('str')
+
     df_countries.loc[df_countries['country_name'] == 'Russia', 'continents'] = 'Europe' 
     df_countries.loc[df_countries['country_name'] == 'Azerbaijan', 'continents'] = 'Asia'
     df_countries.loc[df_countries['country_name'] == 'Turkey', 'continents'] = 'Asia'
@@ -133,4 +143,5 @@ def load_data_to_postgresql(df_countries, df_country_languages, df_language, con
         logging.info("DataFrames have been successfully loaded into the PostgreSQL database.")
     except Exception as e:
         logging.error(f"Error loading data to PostgreSQL: {e}")
+        
 

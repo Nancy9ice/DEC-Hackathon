@@ -22,5 +22,5 @@ def execute_etl():
     load_data_to_postgresql(df_countries, df_country_languages, df_language, connection_string)
     logging.info("Data loading process complete")
 
-# if __name__ == "__main__":
-#     execute_etl()
+if __name__ == "__main__":
+    execute_etl()
