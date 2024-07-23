@@ -1,6 +1,6 @@
 import logging
 import os
-from helper_functions import fetch_data, clean_data, transform_data, load_data_to_postgresql
+from dags.helper_functions import fetch_data, clean_data, transform_data, load_data_to_postgresql
 import psycopg2
 
 def main():

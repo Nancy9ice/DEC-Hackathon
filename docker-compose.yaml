@@ -72,25 +72,13 @@ services:
     volumes:
       - postgres-db-volume:/var/lib/postgresql/data
     ports:
-      - 5431:5432
+      - 5433:5432
     healthcheck:
       test: ["CMD", "pg_isready", "-U", "airflow"]
       interval: 10s
       retries: 5
       start_period: 5s
     restart: always
-  
-  pgadmin:
-    image: dpage/pgadmin4
-    restart: always
-    environment:
-      - PGADMIN_DEFAULT_EMAIL= airflow
-      - PGADMIN_DEFAULT_PASSWORD=airflow
-   
-    ports:
-      - "5050:80"
-    depends_on:
-      - postgres
 
   airflow-webserver:
     <<: *airflow-common
