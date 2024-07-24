@@ -36,6 +36,10 @@ The following tools and skills were used in this project:
 
 * **Airflow** used for Orchestration: At first, we thought this was an overly technical solution for a usecase like this and thought of using a simple cron job instead. However, we considered that since this was a travel agency, there could be variety of data that could spring up so it was best to start with Airflow since it's open-source and won't incur any extra costs asides the hosting. 
 
+## ETL Architecture Diagram
+
+![alt text](images/ETL_Architecture_diagram.png)
+
 ## Data Extraction and Transformation Steps
 
 - Step 1: Fetch Data from the API
