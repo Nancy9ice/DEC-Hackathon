@@ -70,6 +70,10 @@ The following tools and skills were used in this project:
 
 - Step 4: Load DataFrames to PostgreSQL database
 
+## Data Model
+
+![alt text](<images/Model of hackathon data.png>)
+
 
 ## Questions 
 
